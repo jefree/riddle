@@ -35,22 +35,32 @@ var Stick = function(posX, posY, angle) {
   // METHODS
 
   self.posX = function(posX) {
-    if (posX === null) return x;
+    if (posX == null) return x;
 
     x = posX;
     self.position.x = StickMapper.mapX(posX);
   }
 
   self.posY = function(posY) {
-    if (posY === null) return y;
+    if (posY == null) return y;
 
     y = posY;
     self.position.y= StickMapper.mapY(posY)
   }
 
+  self.equalsTo = function(other) {
+    return self.posX() == other.x && self.posY() == other.y && self.angle == other.angle;
+  }
+
   // set initial position on map
   self.posX(posX);
   self.posY(posY);
+
+  self.inputEnabled = true;
+  
+  self.events.onInputUp.add(function(){
+    onStickClick(this);
+  }, self);
 }
 
 Stick.prototype = Object.create(Phaser.Sprite.prototype);
