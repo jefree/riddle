@@ -55,9 +55,6 @@ var Stick = function(posX, posY, angle) {
   // set initial position on map
   self.posX(posX);
   self.posY(posY);
-
-  self.inputEnabled = true;
-  self.input.useHandCursor = true;
   
   self.events.onInputUp.add(function(){
     onStickClick(this);

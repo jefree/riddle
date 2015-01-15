@@ -152,11 +152,7 @@ function onSolved() {
   text.setText('Congratulations\n\nclick here to receive\n\na cookie');
   
   text.align = 'center'
-
-  text.inputEnabled = true;
-  text.input.useHandCursor = true;
-
-  text.events.onInputUp.add(onClickVictory);
+  game.input.onDown.add(onClickVictory);
 
   //--- disable input for all sticks
 
@@ -178,9 +174,12 @@ function preload() {
 }
 
 function create() {
-  StickMapper.config(40, 25, 55, 40);
-  
+
   game.stage.backgroundColor = '#28a0cf';
+
+  //---
+  //--- set up sitck mapper
+  StickMapper.config(40, 25, 55, 40);
 
   //--- 
   //--- set scale
@@ -192,7 +191,46 @@ function create() {
   //--- create sticks
   //---
   initial_sticks.forEach(function(stick) {
-    sticks.push(new Stick(stick.x, stick.y, stick.angle));
+    var stick = new Stick(stick.x, stick.y, stick.angle)    
+    sticks.push(stick);
+  });
+
+  //---
+  //--- add curtain for initial text
+  //---
+  var bitmap = game.add.bitmapData(game.world.width, game.world.height, 'curtain', true);
+  bitmap.ctx.fillRect(0, 0, bitmap.width, bitmap.height);
+
+  var curtain = game.add.sprite(0, 0, bitmap);
+  curtain.alpha = 0.75;
+  
+  //---
+  //--- add initial text
+  //---
+  var text = game.add.bitmapText(game.world.centerX - 163, game.world.centerY - 60, 'font', '', 11);
+  text.align = 'center';
+
+  text.setText( 'Elimina 4 palillos de los\n\n'+
+                '16 que forman la figura\n\n' +
+                'de manera que queden\n\n' +
+                'exactamente 4 triangulos\n\n'+
+                'equilateros\n\n' +
+                '(click to start)');
+
+  game.input.onDown.add(function initial_down(){
+    game.world.remove(text);
+
+    game.add.tween(curtain).to({alpha: 0}, 1000, 'Linear', true)
+      .onComplete.add(function(){
+
+        sticks.forEach(function(stick) {
+          stick.inputEnabled = true;
+          stick.input.useHandCursor = true;
+        });
+
+      });
+
+    game.input.onDown.remove(initial_down);
   });
 }
 
