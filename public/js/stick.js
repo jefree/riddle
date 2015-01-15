@@ -57,6 +57,7 @@ var Stick = function(posX, posY, angle) {
   self.posY(posY);
 
   self.inputEnabled = true;
+  self.input.useHandCursor = true;
   
   self.events.onInputUp.add(function(){
     onStickClick(this);

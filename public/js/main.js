@@ -154,6 +154,8 @@ function onSolved() {
   text.align = 'center'
 
   text.inputEnabled = true;
+  text.input.useHandCursor = true;
+
   text.events.onInputUp.add(onClickVictory);
 
   //--- disable input for all sticks
@@ -185,7 +187,6 @@ function create() {
   //---
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   game.scale.setMinMax(WIDTH*0.6, HEIGHT*0.6, WIDTH, HEIGHT)
-  
 
   //--- 
   //--- create sticks
