@@ -1,7 +1,7 @@
-var width = document.body.offsetWidth < 345 ? document.body.offsetWidth : 345;
-var height = 240;
+var WIDTH = 345;
+var HEIGHT = 240;
 
-var game = new Phaser.Game(width, height, Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(WIDTH, HEIGHT, Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
 var sticks = []
 var solved = false;
 
@@ -150,8 +150,8 @@ function checkSolution() {
 function onSolved() {
   var button = game.add.button(game.world.centerX, game.world.centerY, 'button', onClickVictoryButton);
     
-  button.position.x -= button.width/2;
-  button.position.y -= button.height/2;
+  button.position.x -= button.WIDTH/2;
+  button.position.y -= button.HEIGHT/2;
 
   solved = true;
 
@@ -169,8 +169,19 @@ function preload() {
 
 function create() {
   StickMapper.config(40, 25, 55, 40);
+  
   game.stage.backgroundColor = '#28a0cf';
 
+  //--- 
+  //--- set scale
+  //---
+  if (window.innerWidth <= WIDTH) {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+  }
+
+  //--- 
+  //--- create sticks
+  //---
   initial_sticks.forEach(function(stick) {
     sticks.push(new Stick(stick.x, stick.y, stick.angle));
   });
