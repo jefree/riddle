@@ -31,7 +31,7 @@ var initial_sticks = [
 
 ]
 
-var solution = [
+var base_solution = [
   {x: 0, y: 2, angle: 60 },
   {x: 0, y: 4, angle: 120 },
 
@@ -39,14 +39,14 @@ var solution = [
   
   //{x: 2, y: 0, angle: 60 },  
   //{x: 2, y: 2, angle: 120 },
-  {x: 2, y: 4, angle: 60 },
-  {x: 2, y: 6, angle: 120 },
+  //{x: 2, y: 4, angle: 60 },
+  //{x: 2, y: 6, angle: 120 },
 
   {x: 3, y: 5, angle: 0 },
   {x: 3, y: 1, angle: 0 },
 
-  {x: 4, y: 0, angle: -60 },
-  {x: 4, y: 2, angle: -120 },
+  //{x: 4, y: 0, angle: -60 },
+  //{x: 4, y: 2, angle: -120 },
   //{x: 4, y: 4, angle: -60 },
   //{x: 4, y: 6, angle: -120 },
 
@@ -54,6 +54,24 @@ var solution = [
 
   {x: 6, y: 2, angle: -60 },
   {x: 6, y: 4, angle: -120 },
+]
+
+var solutions = [ 
+  [
+    {x: 2, y: 0, angle: 60 },  
+    {x: 2, y: 2, angle: 120 },
+    
+    {x: 4, y: 4, angle: -60 },
+    {x: 4, y: 6, angle: -120 },
+  ],
+
+  [
+    {x: 2, y: 4, angle: 60 },
+    {x: 2, y: 6, angle: 120 },
+
+    {x: 4, y: 0, angle: -60 },
+    {x: 4, y: 2, angle: -120 },
+  ]
 ]
 
 function onStickClick(stick) {
@@ -67,39 +85,77 @@ function onStickClick(stick) {
     stick.alive = true;
     stick.alpha = 1.0
   }
+
+  checkSolution();
 }
 
-function checkSolution() {
-  var temp_solution = solution.slice(0);
-  var temp_sticks = sticks.slice(0).filter(function(stick){ return stick.alive});
+function search_solution(sticks, solution) {
+  for (var i=0; i < sticks.length; i++) {
+    console.log('sticks.length', sticks.length);
+    console.log('solution.length', solution.length);
 
-  var founds = 0;
-
-  for (i in temp_sticks) {
-
-    console.log(temp_sticks[i].angle);
-
-    if (temp_solution.length == 0) {
+    if (solution.length == 0){
+      console.log('find base solution');
       break;
     }
 
-    for (j in temp_solution) {
+    for (var j=0; j < solution.length; j++) {
 
-      if (temp_sticks[i].equalsTo(temp_solution[j])) {
-        temp_solution.splice(j, 1);
-        founds += 1;
+      console.log('j', j);
+
+      if(sticks[i].equalsTo(solution[j])) {
+
+        console.log('found');
+
+        sticks.splice(i, 1);
+        solution.splice(j, 1);
+
+        i -= 1;
+
         break;
       }
     }
   }
 
-  if (temp_sticks.length > 0 && temp_sticks.length == founds && solution.length == founds) {
-    var button = game.add.button(game.world.centerX, game.world.centerY, 'button', onClickVictoryButton);
-    
-    button.position.x -= button.width/2;
-    button.position.y -= button.height/2;
+  console.log('base remaining', solution.length);
+  console.log('remaining', sticks.length);
 
+  return sticks.length == 0;
+}
+
+function checkSolution() {
+  var temp_solution = base_solution.slice(0);
+  var temp_sticks = sticks.filter(function(stick){ return stick.alive});
+
+  if (temp_sticks.length < temp_solution.length) { return; } 
+
+  if (search_solution(temp_sticks, temp_solution)) {
+    onSolved();
   }
+  else {
+    if (temp_solution.length == 0) {
+
+      console.log('try solutions');
+
+      for (i in solutions) {
+        if (search_solution(temp_sticks.slice(0), solutions[i].slice(0))) {
+          onSolved();
+          break;
+        }
+      }
+    }  
+  }
+}
+
+function onSolved() {
+  var button = game.add.button(game.world.centerX, game.world.centerY, 'button', onClickVictoryButton);
+    
+  button.position.x -= button.width/2;
+  button.position.y -= button.height/2;
+
+  solved = true;
+
+  console.log('Victory');
 }
 
 function onClickVictoryButton() {
@@ -121,8 +177,4 @@ function create() {
 }
 
 function update() {
-
-  if (!solved) {
-    checkSolution()
-  }
 }
