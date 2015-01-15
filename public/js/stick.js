@@ -49,7 +49,7 @@ var Stick = function(posX, posY, angle) {
   }
 
   self.equalsTo = function(other) {
-    return self.posX() == other.x && self.posY() == other.y && self.angle == other.angle;
+    return self.posX() == other.x && self.posY() == other.y && Math.round(self.angle) == Math.round(other.angle);
   }
 
   // set initial position on map
