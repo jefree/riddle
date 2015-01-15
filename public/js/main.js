@@ -148,23 +148,31 @@ function checkSolution() {
 }
 
 function onSolved() {
-  var button = game.add.button(game.world.centerX, game.world.centerY, 'button', onClickVictoryButton);
-    
-  button.position.x -= button.WIDTH/2;
-  button.position.y -= button.HEIGHT/2;
+  var text = game.add.bitmapText(game.world.centerX - 135, game.world.centerY - 30, 'font', '', 11);
+  text.setText('Congratulations\n\nclick here to receive\n\na cookie');
+  
+  text.align = 'center'
+
+  text.inputEnabled = true;
+  text.events.onInputUp.add(onClickVictory);
+
+  //--- disable input for all sticks
+
+  sticks.forEach(function(stick) {
+    stick.inputEnabled = false;
+  });
 
   solved = true;
-
   console.log('Victory');
 }
 
-function onClickVictoryButton() {
+function onClickVictory() {
   alert('You Win');
 }
 
 function preload() {
   game.load.image('stick', 'public/img/stick.png');
-  game.load.image('button', 'public/img/button.png');
+  game.load.bitmapFont('font','public/fonts/carrier_command.png','public/fonts/carrier_command.xml');
 }
 
 function create() {
@@ -175,9 +183,9 @@ function create() {
   //--- 
   //--- set scale
   //---
-  if (window.innerWidth <= WIDTH) {
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-  }
+  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+  game.scale.setMinMax(WIDTH*0.6, HEIGHT*0.6, WIDTH, HEIGHT)
+  
 
   //--- 
   //--- create sticks

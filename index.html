@@ -4,12 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width"/>
   <title>MatchSticks Prototype</title>
+
+  <style>
+    #canvas {
+      width: 100%;
+      text-align: center;
+    }
+
+    #canvas canvas {
+      display: block;
+      margin: auto;
+    }
+
+    #text {
+      text-align: center;
+    }
+
+    #text span {
+      color: red;
+    }
+
+  </style>
+
+
 </head>
 <body>
   
-  <div id="canvas"></div>
-
-  <p>Elimina 4 palillos de los 16 que forman la figura, de manera que queden exactamente 4 triangulos equilateros</p>
+  <div id="canvas">
+    
+  </div>
+  
+  <div id="text">
+    <p>Elimina <span>4</span> palillos de los <span>16</span> que forman la figura, de manera que queden exactamente <span>4</span> triangulos equilateros</p>
+  </div>
 
   <script src="http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.1/phaser.min.js"></script>
   <script src="public/js/stick.js"></script>
