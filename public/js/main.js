@@ -3,7 +3,9 @@ var HEIGHT = 240;
 
 var game = new Phaser.Game(WIDTH, HEIGHT, Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
 var sticks = []
-var solved = false;
+var curtain;
+
+//--- data for initial sticks on board
 
 var initial_sticks = [
   {x: 0, y: 2, angle: 60 },
@@ -31,6 +33,8 @@ var initial_sticks = [
 
 ]
 
+//--- stick set present in all solutions
+
 var base_solution = [
   {x: 0, y: 2, angle: 60 },
   {x: 0, y: 4, angle: 120 },
@@ -56,6 +60,8 @@ var base_solution = [
   {x: 6, y: 4, angle: -120 },
 ]
 
+// --- remaining stick set by specific solution
+
 var solutions = [ 
   [
     {x: 2, y: 0, angle: 60 },  
@@ -74,6 +80,8 @@ var solutions = [
   ]
 ]
 
+//---
+
 function onStickClick(stick) {
   console.log('click on stick :)');
 
@@ -88,6 +96,8 @@ function onStickClick(stick) {
 
   checkSolution();
 }
+
+//---
 
 function search_solution(sticks, solution) {
   for (var i=0; i < sticks.length; i++) {
@@ -148,28 +158,36 @@ function checkSolution() {
 }
 
 function onSolved() {
-  var text = game.add.bitmapText(game.world.centerX - 135, game.world.centerY - 30, 'font', '', 11);
-  text.setText('Congratulations\n\nclick here to receive\n\na cookie');
-  
-  text.align = 'center'
-  game.input.onDown.add(onClickVictory);
 
+  //---
   //--- disable input for all sticks
-
+  //---
   sticks.forEach(function(stick) {
     stick.inputEnabled = false;
   });
 
-  solved = true;
+  //---
+  //--- final tween effect
+  //---
+  game.add.tween(curtain).to({alpha: 0.7}, 1000, 'Linear', true)
+    .onComplete.add(function(){
+      var text = game.add.bitmapText(game.world.centerX - 135, game.world.centerY - 30, 'font', '', 11);
+      text.setText('Congratulations\n\nclick here to receive\n\na cookie');
+
+      text.align = 'center'
+      game.input.onDown.add(onClickVictory);
+    });
+
   console.log('Victory');
 }
 
 function onClickVictory() {
-  alert('You Win');
+  window.location = 'http://www.facebook.com/l.php?u=http%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F6%2F6e%2FPepperidge-Farm-Nantucket-Cookie.jpg&h=6AQGvBvBR'
 }
 
 function preload() {
-  game.load.image('stick', 'public/img/stick.png');
+  //game.load.image('stick', 'public/img/stick.png');
+  game.load.image('stick', 'public/img/laser.png');
   game.load.bitmapFont('font','public/fonts/carrier_command.png','public/fonts/carrier_command.xml');
 }
 
@@ -201,7 +219,7 @@ function create() {
   var bitmap = game.add.bitmapData(game.world.width, game.world.height, 'curtain', true);
   bitmap.ctx.fillRect(0, 0, bitmap.width, bitmap.height);
 
-  var curtain = game.add.sprite(0, 0, bitmap);
+  curtain = game.add.sprite(0, 0, bitmap);
   curtain.alpha = 0.75;
   
   //---

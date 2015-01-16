@@ -21,15 +21,15 @@ var StickMapper = {
 }
 
 var Stick = function(posX, posY, angle) {
-  Phaser.Sprite.call(this, game, 0, 0 , 'stick');
-
   var self = this;
   var x = posX, 
       y = posY;
 
-  self.angle = angle;
+  Phaser.Sprite.call(self, game, 0, 0 , 'stick');
 
+  self.angle = angle;
   self.anchor.setTo(0.5, 0.5);
+
   game.add.existing(self);
 
   // METHODS
